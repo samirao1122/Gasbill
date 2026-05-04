@@ -3,11 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import render
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
+from bills.views import LoginView, RefreshView, VerifyView
 
 def frontend_view(request):
     return render(request, 'index.html')
@@ -17,9 +13,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # JWT Auth
-    path('api/auth/login/',   TokenObtainPairView.as_view(),  name='token_obtain_pair'),
-    path('api/auth/refresh/', TokenRefreshView.as_view(),     name='token_refresh'),
-    path('api/auth/verify/',  TokenVerifyView.as_view(),      name='token_verify'),
+    path('api/auth/login/',   LoginView.as_view(),      name='token_obtain_pair'),
+    path('api/auth/refresh/', RefreshView.as_view(),    name='token_refresh'),
+    path('api/auth/verify/',  VerifyView.as_view(),     name='token_verify'),
 
     # Bills App
     path('api/', include('bills.urls')),

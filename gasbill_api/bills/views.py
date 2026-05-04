@@ -2,6 +2,7 @@ from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from django.contrib.auth.models import User
 from django.db.models import Sum, Count, Q
 from django.utils import timezone
@@ -14,6 +15,19 @@ from .serializers import (
     GasBillSerializer, GasBillCreateSerializer,
     PaymentSerializer, ComplaintSerializer, DashboardSerializer
 )
+
+
+# ─── JWT Login View ───────────────────────────────────────────────────────────
+class LoginView(TokenObtainPairView):
+    permission_classes = [AllowAny]
+
+
+class RefreshView(TokenRefreshView):
+    permission_classes = [AllowAny]
+
+
+class VerifyView(TokenVerifyView):
+    permission_classes = [AllowAny]
 
 
 # ─── User Registration ────────────────────────────────────────────────────────
