@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GasFlow — Gas Bill Management System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════ LOGIN PAGE ═══════════════════════════════ -->
+  <div id="loginPage" class="auth-page">
+    <div class="auth-bg">
+      <div class="flame-anim">
+        <div class="flame f1"></div>
+        <div class="flame f2"></div>
+        <div class="flame f3"></div>
+      </div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="logo-icon">⛽</span>
+        <span class="logo-text">GasFlow</span>
+      </div>
+      <p class="auth-sub">Gas Bill Management System</p>
+      <div id="loginError" class="alert alert-error hidden"></div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="loginUsername" placeholder="Enter username" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter password" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="handleLogin()">
+        <span class="btn-text">Sign In</span>
+        <span class="btn-loader hidden">●●●</span>
+      </button>
+      <p class="auth-switch">No account? <a href="#" onclick="showPage('registerPage')">Register here</a></p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ REGISTER PAGE ════════════════════════════ -->
+  <div id="registerPage" class="auth-page hidden">
+    <div class="auth-bg">
+      <div class="flame-anim">
+        <div class="flame f1"></div>
+        <div class="flame f2"></div>
+        <div class="flame f3"></div>
+      </div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="logo-icon">⛽</span>
+        <span class="logo-text">GasFlow</span>
+      </div>
+      <p class="auth-sub">Create your account</p>
+      <div id="registerError" class="alert alert-error hidden"></div>
+      <div id="registerSuccess" class="alert alert-success hidden"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="regFirstName" placeholder="First name" />
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" id="regLastName" placeholder="Last name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="regUsername" placeholder="Choose username" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="regEmail" placeholder="Email address" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="regPassword" placeholder="Min 6 characters" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="handleRegister()">Create Account</button>
+      <p class="auth-switch">Already have account? <a href="#" onclick="showPage('loginPage')">Login</a></p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ MAIN APP ═════════════════════════════════ -->
+  <div id="appPage" class="hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="s-logo">
+          <span class="logo-icon">⛽</span>
+          <span class="logo-text">GasFlow</span>
+        </div>
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-section="dashboard" onclick="navigate('dashboard')">
+          <span class="nav-icon">◈</span><span class="nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" data-section="customers" onclick="navigate('customers')">
+          <span class="nav-icon">◉</span><span class="nav-label">Customers</span>
+        </a>
+        <a href="#" class="nav-item" data-section="readings" onclick="navigate('readings')">
+          <span class="nav-icon">◎</span><span class="nav-label">Meter Readings</span>
+        </a>
+        <a href="#" class="nav-item" data-section="bills" onclick="navigate('bills')">
+          <span class="nav-icon">▣</span><span class="nav-label">Gas Bills</span>
+        </a>
+        <a href="#" class="nav-item" data-section="payments" onclick="navigate('payments')">
+          <span class="nav-icon">◆</span><span class="nav-label">Payments</span>
+        </a>
+        <a href="#" class="nav-item" data-section="tariffs" onclick="navigate('tariffs')">
+          <span class="nav-icon">◈</span><span class="nav-label">Tariffs</span>
+        </a>
+        <a href="#" class="nav-item" data-section="complaints" onclick="navigate('complaints')">
+          <span class="nav-icon">⚠</span><span class="nav-label">Complaints</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <div class="user-details">
+            <span id="userName">User</span>
+            <span id="userRole">Staff</span>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="handleLogout()">⏻</button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- TOP BAR -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <h1 class="page-title" id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="search-wrap">
+            <input type="text" id="globalSearch" placeholder="Search..." oninput="handleGlobalSearch()" />
+            <span class="search-icon">⌕</span>
+          </div>
+          <div class="notif-dot" id="notifDot"></div>
+        </div>
+      </div>
+
+      <!-- TOAST -->
+      <div id="toast" class="toast hidden"></div>
+
+      <!-- ─── DASHBOARD SECTION ─── -->
+      <section id="sec-dashboard" class="section active">
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card" id="stat-customers">
+            <div class="stat-icon">◉</div>
+            <div class="stat-info"><span class="stat-num" id="s-customers">—</span><span class="stat-label">Total Customers</span></div>
+          </div>
+          <div class="stat-card accent" id="stat-active">
+            <div class="stat-icon">✓</div>
+            <div class="stat-info"><span class="stat-num" id="s-active">—</span><span class="stat-label">Active</span></div>
+          </div>
+          <div class="stat-card" id="stat-bills">
+            <div class="stat-icon">▣</div>
+            <div class="stat-info"><span class="stat-num" id="s-bills">—</span><span class="stat-label">Total Bills</span></div>
+          </div>
+          <div class="stat-card warn" id="stat-unpaid">
+            <div class="stat-icon">!</div>
+            <div class="stat-info"><span class="stat-num" id="s-unpaid">—</span><span class="stat-label">Unpaid Bills</span></div>
+          </div>
+          <div class="stat-card danger" id="stat-overdue">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-info"><span class="stat-num" id="s-overdue">—</span><span class="stat-label">Overdue</span></div>
+          </div>
+          <div class="stat-card success" id="stat-revenue">
+            <div class="stat-icon">₨</div>
+            <div class="stat-info"><span class="stat-num" id="s-revenue">—</span><span class="stat-label">Total Revenue</span></div>
+          </div>
+          <div class="stat-card" id="stat-complaints">
+            <div class="stat-icon">⚠</div>
+            <div class="stat-info"><span class="stat-num" id="s-complaints">—</span><span class="stat-label">Open Complaints</span></div>
+          </div>
+          <div class="stat-card accent" id="stat-readings">
+            <div class="stat-icon">◎</div>
+            <div class="stat-info"><span class="stat-num" id="s-readings">—</span><span class="stat-label">This Month Readings</span></div>
+          </div>
+        </div>
+
+        <div class="dash-bottom">
+          <div class="dash-card">
+            <div class="dash-card-header"><h3>Recent Bills</h3><button class="btn btn-sm" onclick="navigate('bills')">View All</button></div>
+            <div class="table-wrap"><table class="table" id="recentBillsTable">
+              <thead><tr><th>Bill #</th><th>Customer</th><th>Amount</th><th>Status</th><th>Due</th></tr></thead>
+              <tbody id="recentBillsBody"><tr><td colspan="5" class="loading-row">Loading...</td></tr></tbody>
+            </table></div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-header"><h3>Recent Payments</h3><button class="btn btn-sm" onclick="navigate('payments')">View All</button></div>
+            <div class="table-wrap"><table class="table" id="recentPaymentsTable">
+              <thead><tr><th>Bill #</th><th>Amount</th><th>Method</th><th>Date</th></tr></thead>
+              <tbody id="recentPaymentsBody"><tr><td colspan="4" class="loading-row">Loading...</td></tr></tbody>
+            </table></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── CUSTOMERS SECTION ─── -->
+      <section id="sec-customers" class="section hidden">
+        <div class="section-toolbar">
+          <input type="text" class="search-input" placeholder="Search customers…" oninput="searchCustomers(this.value)" />
+          <button class="btn btn-primary" onclick="openModal('customerModal')">+ Add Customer</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>#</th><th>Name</th><th>CNIC</th><th>Phone</th><th>Meter No</th><th>Type</th><th>City</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="customersBody"><tr><td colspan="9" class="loading-row">Loading...</td></tr></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="customersPagination"></div>
+      </section>
+
+      <!-- ─── READINGS SECTION ─── -->
+      <section id="sec-readings" class="section hidden">
+        <div class="section-toolbar">
+          <input type="text" class="search-input" placeholder="Search readings…" oninput="searchReadings(this.value)" />
+          <button class="btn btn-primary" onclick="openModal('readingModal')">+ Add Reading</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>#</th><th>Customer</th><th>Date</th><th>Previous</th><th>Current</th><th>Units</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="readingsBody"><tr><td colspan="8" class="loading-row">Loading...</td></tr></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="readingsPagination"></div>
+      </section>
+
+      <!-- ─── BILLS SECTION ─── -->
+      <section id="sec-bills" class="section hidden">
+        <div class="section-toolbar">
+          <input type="text" class="search-input" placeholder="Search bills…" oninput="searchBills(this.value)" />
+          <select id="billStatusFilter" onchange="filterBills()" class="select-filter">
+            <option value="">All Status</option>
+            <option value="unpaid">Unpaid</option>
+            <option value="paid">Paid</option>
+            <option value="overdue">Overdue</option>
+            <option value="partial">Partial</option>
+          </select>
+          <button class="btn btn-primary" onclick="openModal('billModal')">+ Generate Bill</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Bill #</th><th>Customer</th><th>Month</th><th>Units</th><th>Amount</th><th>Status</th><th>Due Date</th><th>Actions</th></tr></thead>
+            <tbody id="billsBody"><tr><td colspan="8" class="loading-row">Loading...</td></tr></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="billsPagination"></div>
+      </section>
+
+      <!-- ─── PAYMENTS SECTION ─── -->
+      <section id="sec-payments" class="section hidden">
+        <div class="section-toolbar">
+          <input type="text" class="search-input" placeholder="Search payments…" oninput="searchPayments(this.value)" />
+          <button class="btn btn-primary" onclick="openModal('paymentModal')">+ Record Payment</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>#</th><th>Bill #</th><th>Customer</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="paymentsBody"><tr><td colspan="8" class="loading-row">Loading...</td></tr></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="paymentsPagination"></div>
+      </section>
+
+      <!-- ─── TARIFFS SECTION ─── -->
+      <section id="sec-tariffs" class="section hidden">
+        <div class="section-toolbar">
+          <span></span>
+          <button class="btn btn-primary" onclick="openModal('tariffModal')">+ Add Tariff</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Slab</th><th>Min Units</th><th>Max Units</th><th>Rate/Unit</th><th>Fixed Charges</th><th>Effective From</th><th>Active</th><th>Actions</th></tr></thead>
+            <tbody id="tariffsBody"><tr><td colspan="8" class="loading-row">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ─── COMPLAINTS SECTION ─── -->
+      <section id="sec-complaints" class="section hidden">
+        <div class="section-toolbar">
+          <input type="text" class="search-input" placeholder="Search complaints…" oninput="searchComplaints(this.value)" />
+          <select id="complaintStatusFilter" onchange="filterComplaints()" class="select-filter">
+            <option value="">All Status</option>
+            <option value="open">Open</option>
+            <option value="in_progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+            <option value="closed">Closed</option>
+          </select>
+          <button class="btn btn-primary" onclick="openModal('complaintModal')">+ Submit Complaint</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>#</th><th>Customer</th><th>Category</th><th>Subject</th><th>Priority</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="complaintsBody"><tr><td colspan="8" class="loading-row">Loading...</td></tr></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="complaintsPagination"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ══════════════════════════ MODALS ═══════════════════════════════════════ -->
+
+  <!-- Customer Modal -->
+  <div id="customerModal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="customerModalTitle">Add Customer</h2>
+        <button class="modal-close" onclick="closeModal('customerModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="customerId" />
+        <div class="form-row">
+          <div class="form-group"><label>Full Name *</label><input type="text" id="cName" placeholder="Muhammad Ali" /></div>
+          <div class="form-group"><label>Father Name</label><input type="text" id="cFatherName" placeholder="Muhammad Akbar" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>CNIC *</label><input type="text" id="cCnic" placeholder="34101-1234567-1" /></div>
+          <div class="form-group"><label>Phone *</label><input type="text" id="cPhone" placeholder="0300-1234567" /></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" id="cEmail" placeholder="email@example.com" /></div>
+        <div class="form-group"><label>Address *</label><textarea id="cAddress" placeholder="Street, Area, City" rows="2"></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>City</label><input type="text" id="cCity" value="Gujranwala" /></div>
+          <div class="form-group"><label>Meter Number *</label><input type="text" id="cMeter" placeholder="GW-00123" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Meter Type</label>
+            <select id="cMeterType">
+              <option value="residential">Residential</option>
+              <option value="commercial">Commercial</option>
+              <option value="industrial">Industrial</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Connection Date *</label><input type="date" id="cConnectionDate" /></div>
+        </div>
+        <div class="form-group"><label>Status</label>
+          <select id="cStatus">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="suspended">Suspended</option>
+            <option value="disconnected">Disconnected</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('customerModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveCustomer()">Save Customer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reading Modal -->
+  <div id="readingModal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="readingModalTitle">Add Meter Reading</h2>
+        <button class="modal-close" onclick="closeModal('readingModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="readingId" />
+        <div class="form-group"><label>Customer *</label>
+          <select id="rCustomer"><option value="">-- Select Customer --</option></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Reading Date *</label><input type="date" id="rDate" /></div>
+          <div class="form-group"><label>Reader Name</label><input type="text" id="rReaderName" placeholder="Bilal Ahmed" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Previous Reading *</label><input type="number" id="rPrevious" placeholder="1200" step="0.01" /></div>
+          <div class="form-group"><label>Current Reading *</label><input type="number" id="rCurrent" placeholder="1350" step="0.01" /></div>
+        </div>
+        <div class="form-group"><label>Status</label>
+          <select id="rStatus">
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="estimated">Estimated</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Remarks</label><textarea id="rRemarks" rows="2" placeholder="Any notes..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('readingModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveReading()">Save Reading</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bill Modal -->
+  <div id="billModal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="billModalTitle">Generate Bill</h2>
+        <button class="modal-close" onclick="closeModal('billModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="billId" />
+        <div class="form-row">
+          <div class="form-group"><label>Customer *</label>
+            <select id="bCustomer"><option value="">-- Select Customer --</option></select>
+          </div>
+          <div class="form-group"><label>Meter Reading *</label>
+            <select id="bReading"><option value="">-- Select Reading --</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Tariff *</label>
+            <select id="bTariff"><option value="">-- Select Tariff --</option></select>
+          </div>
+          <div class="form-group"><label>Units Consumed *</label><input type="number" id="bUnits" placeholder="150" step="0.01" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Billing Month *</label><input type="date" id="bMonth" /></div>
+          <div class="form-group"><label>Due Date *</label><input type="date" id="bDueDate" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Gas Charges *</label><input type="number" id="bGasCharges" placeholder="8500" step="0.01" /></div>
+          <div class="form-group"><label>Fixed Charges</label><input type="number" id="bFixedCharges" placeholder="150" step="0.01" value="0" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Meter Rent</label><input type="number" id="bMeterRent" placeholder="50" step="0.01" value="0" /></div>
+          <div class="form-group"><label>GST %</label><input type="number" id="bGst" placeholder="17" step="0.01" value="17" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>GST Amount</label><input type="number" id="bGstAmount" placeholder="auto" step="0.01" value="0" /></div>
+          <div class="form-group"><label>Previous Arrears</label><input type="number" id="bArrears" placeholder="0" step="0.01" value="0" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Total Amount *</label><input type="number" id="bTotal" placeholder="10162" step="0.01" /></div>
+          <div class="form-group"><label>Status</label>
+            <select id="bStatus">
+              <option value="unpaid">Unpaid</option>
+              <option value="paid">Paid</option>
+              <option value="overdue">Overdue</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Notes</label><textarea id="bNotes" rows="2" placeholder="Any notes..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('billModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveBill()">Save Bill</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div id="paymentModal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="paymentModalTitle">Record Payment</h2>
+        <button class="modal-close" onclick="closeModal('paymentModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="paymentId" />
+        <div class="form-group"><label>Bill *</label>
+          <select id="pBill"><option value="">-- Select Bill --</option></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Payment Date *</label><input type="date" id="pDate" /></div>
+          <div class="form-group"><label>Amount *</label><input type="number" id="pAmount" placeholder="10162.50" step="0.01" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Payment Method</label>
+            <select id="pMethod">
+              <option value="cash">Cash</option>
+              <option value="bank_transfer">Bank Transfer</option>
+              <option value="easypaisa">EasyPaisa</option>
+              <option value="jazzcash">JazzCash</option>
+              <option value="online">Online Portal</option>
+              <option value="cheque">Cheque</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Transaction ID</label><input type="text" id="pTxId" placeholder="TXN-2024-001" /></div>
+        </div>
+        <div class="form-group"><label>Status</label>
+          <select id="pStatus">
+            <option value="completed">Completed</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Remarks</label><textarea id="pRemarks" rows="2" placeholder="Optional notes..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('paymentModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="savePayment()">Save Payment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tariff Modal -->
+  <div id="tariffModal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="tariffModalTitle">Add Tariff Slab</h2>
+        <button class="modal-close" onclick="closeModal('tariffModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="tariffId" />
+        <div class="form-row">
+          <div class="form-group"><label>Slab *</label>
+            <select id="tSlab">
+              <option value="slab1">Slab 1 (0–100)</option>
+              <option value="slab2">Slab 2 (101–300)</option>
+              <option value="slab3">Slab 3 (301–500)</option>
+              <option value="slab4">Slab 4 (500+)</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Effective From *</label><input type="date" id="tEffective" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Min Units</label><input type="number" id="tMin" placeholder="0" /></div>
+          <div class="form-group"><label>Max Units</label><input type="number" id="tMax" placeholder="100 (blank=unlimited)" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Rate per Unit (Rs.) *</label><input type="number" id="tRate" placeholder="50.00" step="0.01" /></div>
+          <div class="form-group"><label>Fixed Charges (Rs.)</label><input type="number" id="tFixed" placeholder="150.00" step="0.01" value="0" /></div>
+        </div>
+        <div class="form-group"><label>Active</label>
+          <select id="tActive"><option value="true">Yes</option><option value="false">No</option></select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('tariffModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveTariff()">Save Tariff</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complaint Modal -->
+  <div id="complaintModal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="complaintModalTitle">Submit Complaint</h2>
+        <button class="modal-close" onclick="closeModal('complaintModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="complaintId" />
+        <div class="form-group"><label>Customer *</label>
+          <select id="compCustomer"><option value="">-- Select Customer --</option></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Category *</label>
+            <select id="compCategory">
+              <option value="billing">Billing Issue</option>
+              <option value="leakage">Gas Leakage</option>
+              <option value="pressure">Low Pressure</option>
+              <option value="meter">Meter Problem</option>
+              <option value="disconnection">Wrongful Disconnection</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Priority</label>
+            <select id="compPriority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Subject *</label><input type="text" id="compSubject" placeholder="Brief subject" /></div>
+        <div class="form-group"><label>Description *</label><textarea id="compDesc" rows="3" placeholder="Describe the issue in detail..."></textarea></div>
+        <div class="form-group" id="resolveSection" style="display:none">
+          <label>Resolution</label>
+          <textarea id="compResolution" rows="2" placeholder="Resolution details..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('complaintModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveComplaint()">Save Complaint</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Delete Modal -->
+  <div id="confirmModal" class="modal hidden">
+    <div class="modal-box modal-box--sm">
+      <div class="modal-header">
+        <h2>Confirm Delete</h2>
+        <button class="modal-close" onclick="closeModal('confirmModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMessage">Are you sure you want to delete this record? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('confirmModal')">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Bill Modal -->
+  <div id="viewBillModal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2>Bill Details</h2>
+        <button class="modal-close" onclick="closeModal('viewBillModal')">✕</button>
+      </div>
+      <div class="modal-body" id="billDetailContent"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
