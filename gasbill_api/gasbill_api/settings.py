@@ -4,14 +4,28 @@ Django settings for Gas Bill Management API
 
 from pathlib import Path
 from datetime import timedelta
+from decouple import config, Csv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-gasbill-secret-key-change-in-production-xyz123'
+SECRET_KEY = config(
+    'SECRET_KEY',
+    default='django-insecure-gasbill-secret-key-change-in-production-xyz123'
+)
 
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='localhost,127.0.0.1,.pythonanywhere.com',
+    cast=Csv()
+)
+
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='https://*.pythonanywhere.com',
+    cast=Csv()
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -78,7 +92,7 @@ TIME_ZONE = 'Asia/Karachi'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR.parent / 'frontend',
 ]
@@ -110,3 +124,8 @@ SIMPLE_JWT = {
 
 # ─── CORS ─────────────────────────────────────────────────────────────────────
 CORS_ALLOW_ALL_ORIGINS = True
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

@@ -61,6 +61,29 @@ Server runs at: **http://127.0.0.1:8000/**
 
 Django Admin Panel: **http://127.0.0.1:8000/admin/**
 
+### Deploy on PythonAnywhere
+1. Upload the project to PythonAnywhere and set the working directory to the `gasbill_api/` folder.
+2. In the Web tab, set the WSGI configuration file to use `gasbill_api.wsgi`.
+3. Install dependencies with:
+```bash
+pip install -r requirements.txt
+```
+4. Run migrations:
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+5. Collect static files:
+```bash
+python manage.py collectstatic --noinput
+```
+6. In the PythonAnywhere Web tab, map `/static/` to the `staticfiles/` directory.
+7. Optionally set environment variables in the Web tab:
+   - `SECRET_KEY`
+   - `DEBUG=False`
+   - `ALLOWED_HOSTS=yourusername.pythonanywhere.com`
+   - `CSRF_TRUSTED_ORIGINS=https://yourusername.pythonanywhere.com`
+
 ---
 
 ## 🔐 AUTHENTICATION
