@@ -84,6 +84,8 @@ python manage.py collectstatic --noinput
    - `ALLOWED_HOSTS=yourusername.pythonanywhere.com`
    - `CSRF_TRUSTED_ORIGINS=https://yourusername.pythonanywhere.com`
 
+> Note: For local development, use `DEBUG=True` or do not set `DEBUG` so Django can serve static files with `runserver`.
+
 ---
 
 ## 🔐 AUTHENTICATION
